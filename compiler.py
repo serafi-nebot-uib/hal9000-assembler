@@ -26,9 +26,10 @@ if __name__ == "__main__":
             "--output",
             help=f"File output path",
             default="stdout")
-    parser.add_argument("--display-instruction", action=argparse.BooleanOptionalAction)
-    parser.add_argument("--display-hex", action=argparse.BooleanOptionalAction)
-    parser.add_argument("--display-bin", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--hide-numbers" , "-n", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--display-instruction", "--instr", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--display-hex", "--hex", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--display-bin", "--bin", action=argparse.BooleanOptionalAction)
 
     args = vars(parser.parse_args())
 
@@ -37,6 +38,7 @@ if __name__ == "__main__":
     output_instruction = args["display_instruction"]
     output_hex = args["display_hex"]
     output_bin = args["display_bin"]
+    hide_numbers = args["hide_numbers"]
 
     output_opts = (output_instruction, output_hex, output_bin)
     if not any(output_opts):
@@ -53,6 +55,8 @@ if __name__ == "__main__":
         fin = open(input_file_path, "r")
         if output_file_path != "stdout":
             fout = open(output_file_path, "w")
+
+        addr = 0
         for l in fin:
             ln += 1
             l = l.strip("\t\r")
@@ -62,16 +66,20 @@ if __name__ == "__main__":
                 instr = instr_for_mnemonic(*tokens)
                 data = instr.encode()
 
+                if not hide_numbers:
+                    fout.write(f"@{addr:04}".ljust(8))
+
                 if output_instruction:
-                   fout.write(l.strip("\n").ljust(16))
+                  fout.write(l.strip("\n").ljust(16))
 
                 if output_bin:
                     fout.write(f"{int.from_bytes(data):016b} ")
 
                 if output_hex:
-                    fout.write(binascii.hexlify(data).decode("utf-8") + " ")
+                    fout.write(binascii.hexlify(data).decode("utf-8"))
 
                 fout.write("\n")
+            addr += 1
     except Exception as e:
         print(f"[ERROR] on line {ln}:", e)
         exit(-1)
