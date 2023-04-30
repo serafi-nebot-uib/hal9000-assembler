@@ -30,6 +30,7 @@ if __name__ == "__main__":
     parser.add_argument("--display-instruction", "--instr", action=argparse.BooleanOptionalAction)
     parser.add_argument("--display-hex", "--hex", action=argparse.BooleanOptionalAction)
     parser.add_argument("--display-bin", "--bin", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--format-m68k", "--m68k", action=argparse.BooleanOptionalAction)
 
     args = vars(parser.parse_args())
 
@@ -39,10 +40,12 @@ if __name__ == "__main__":
     output_hex = args["display_hex"]
     output_bin = args["display_bin"]
     hide_numbers = args["hide_numbers"]
+    format_m68k = args["format_m68k"]
 
     output_opts = (output_instruction, output_hex, output_bin)
+    output_opts_defaults = [False, True, True, True]
     if not any(output_opts):
-        output_instruction, output_hex, output_bin = [True] * len(output_opts)
+        hide_numbers, output_instruction, output_hex, output_bin = output_opts_defaults
 
     if input_file_path is None:
         parser.print_help()
@@ -56,6 +59,7 @@ if __name__ == "__main__":
         if output_file_path != "stdout":
             fout = open(output_file_path, "w")
 
+        instrl = []
         addr = 0
         for l in fin:
             ln += 1
@@ -65,21 +69,28 @@ if __name__ == "__main__":
             if len(tokens) > 0:
                 instr = instr_for_mnemonic(*tokens)
                 data = instr.encode()
+                instrl.append(data)
 
-                if not hide_numbers:
-                    fout.write(f"@{addr:04}".ljust(8))
+                if not format_m68k:
+                    if not hide_numbers:
+                        fout.write(f"@{addr:04}".ljust(8))
 
-                if output_instruction:
-                  fout.write(l.strip("\n").ljust(16))
+                    if output_instruction:
+                      fout.write(l.strip("\n").ljust(16))
 
-                if output_bin:
-                    fout.write(f"{int.from_bytes(data):016b} ")
+                    if output_bin:
+                        fout.write(f"{int.from_bytes(data):016b} ")
 
-                if output_hex:
-                    fout.write(binascii.hexlify(data).decode("utf-8"))
+                    if output_hex:
+                        fout.write(binascii.hexlify(data).decode("utf-8"))
 
-                fout.write("\n")
+                    fout.write("\n")
             addr += 1
+
+        if format_m68k:
+            l = ["$" + binascii.hexlify(x).decode("utf-8").upper() for x in instrl]
+            for i in range(0, len(instrl), 8):
+                print("\tDC.W " + ",".join(l[i:i+8]))
     except Exception as e:
         print(f"[ERROR] on line {ln}:", e)
         exit(-1)
