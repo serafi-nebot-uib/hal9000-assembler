@@ -4,6 +4,23 @@ This is a very basic HAL9000 "compiler" only meant to be used as support. Use at
 
 ## HAL9000 Insctruction set
 
+| Instruction       | Encoding              | Action                                                        |
+--------------------|-----------------------|---------------------------------------------------------------|
+| `LOA M, Ti`       | `0000xxxmmmmmmmmi`    | Ti &larr; [M]                                                 |
+| `STO Ti, M`       | `0001xxxmmmmmmmmi`    | M &larr; [Ti]                                                 |
+| `LOIP (Xb), Ti`   | `0010xxxxxbbbxxxi`    | Ti &larr; \[[Xb]], Xb &larr; [Xb] + 1                         |
+| `STIP Ti, (Xb)`   | `0011xxxxxbbbxxxi`    | [Xb] &larr; [Ti], Xb &larr; [Xb] + 1                          |
+| `GOI M`           | `0100xxxmmmmmmmmx`    | PC &larr; M                                                   |
+| `GOZ M`           | `0101xxxmmmmmmmmx`    | if Z = 1, PC &larr; M                                         |
+| `GON M`           | `0110xxxmmmmmmmmx`    | if N = 1, PC &larr; M                                         |
+| `EXIT`            | `10xxxxxxxxxxxxxx`    | Stop execution                                                |
+| `COPY Rb, Rc`     | `11000xxxxbbbxccc`    | Rc &larr; [Rb]                                                |
+| `ADD Ra, Rb, Rc`  | `11001aaaxbbbxccc`    | Rc &larr; [Rb] + [Ra]                                         |
+| `SUB Ra, Rb, Rc`  | `11010aaaxbbbxccc`    | Rc &larr; [Rb] - [Ra]                                         |
+| `AND Ra, Rb, Rc`  | `11011aaaxbbbxccc`    | Rc &larr; [Rb] ∧ [Ra]                                         |
+| `SET #k, Rc`      | `11100kkkkkkkkccc`    | Rc &larr; k (extended sign)                                   |
+| `ADQ #k, Rc`      | `11101kkkkkkkkccc`    | Rc &larr; [Rc] + k (extended sign)                            |
+| `LSH #p, Rb, #n`  | `11110pppxbbbxxxn`    | if n = 0, Rb &larr; [Rb] << p<br>else Rb &larr; [Rb] >> p     |
 
 ## Requirements
 
