@@ -75,14 +75,14 @@ if __name__ == "__main__":
                     if not hide_numbers:
                         fout.write(f"@{addr:04}".ljust(8))
 
-                    if output_instruction:
-                      fout.write(l.strip("\n").ljust(16))
-
                     if output_bin:
                         fout.write(f"{int.from_bytes(data):016b} ")
 
                     if output_hex:
-                        fout.write(binascii.hexlify(data).decode("utf-8"))
+                        fout.write(binascii.hexlify(data).decode("utf-8") + " ")
+
+                    if output_instruction:
+                      fout.write(l.strip("\n").ljust(16))
 
                     fout.write("\n")
             addr += 1

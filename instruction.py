@@ -2,6 +2,13 @@ import struct as s
 
 def _signext(k: int, size: int) -> int:
     mask = 2**size - 1
+    max = 2**(size - 1)
+
+    if k > 0:
+        max -= 1
+
+    if abs(k) > max:
+        raise Exception(f"number overflow: {k} is too large for {size} bits")
 
     if k < 0:
         k = (~abs(k) & mask) + 1
