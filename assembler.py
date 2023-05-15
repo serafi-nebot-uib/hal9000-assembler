@@ -19,7 +19,7 @@ def csplit(src: str, delim: str, offset: int = 0, maxsplit: int = 0) -> tuple[li
     return (items, prev)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="HAL9000 compiler")
+    parser = argparse.ArgumentParser(description="HAL9000 Assembler")
     parser.add_argument('file', nargs="?", help="Source code file path")
     parser.add_argument(
             "-o",

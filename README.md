@@ -1,6 +1,6 @@
-# HAL9000 Compiler
+# HAL9000 Assembler
 
-This is a very basic HAL9000 "compiler" only meant to be used as support. Use at your own risk.
+A very basic HAL9000 "assembler" only meant to be used as support. It has not been thoroughly tested, so use it at your own risk.
 
 ## HAL9000 Insctruction set
 
@@ -31,12 +31,12 @@ This is a very basic HAL9000 "compiler" only meant to be used as support. Use at
 Display usage:
 
 ```bash
-$ python3 compiler.py
-usage: compiler.py [-h] [-o OUTPUT] [--hide-numbers | --no-hide-numbers | -n] [--display-instruction | --no-display-instruction | --instr | --no-instr]
+$ python3 assembler.py
+usage: assembler.py [-h] [-o OUTPUT] [--hide-numbers | --no-hide-numbers | -n] [--display-instruction | --no-display-instruction | --instr | --no-instr]
                    [--display-hex | --no-display-hex | --hex | --no-hex] [--display-bin | --no-display-bin | --bin | --no-bin]
                    [file]
 
-HAL9000 compiler
+HAL9000 Assembler
 
 positional arguments:
   file                  Source code file path
@@ -80,7 +80,7 @@ $ cat example.h9k
 	0
 	0
 	0
-$ python3 compiler.py example.h9k
+$ python3 assembler.py example.h9k
 @0000   SET 16, X2      1110000010000010 e082
 @0001   SET 19, X3      1110000010011011 e09b
 @0002   SET 22, X4      1110000010110100 e0b4
